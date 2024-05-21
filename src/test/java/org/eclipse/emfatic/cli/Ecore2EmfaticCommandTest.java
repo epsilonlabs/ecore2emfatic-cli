@@ -12,17 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Ecore2EmfaticCommandTest {
 
-    //@Test
+    @Test
     public void testWithCommandLineOption() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
 
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
-            String[] args = new String[] { "-v" };
+            String[] args = new String[] { "src/test/resources/OO.ecore" };
             PicocliRunner.run(Ecore2EmfaticCommand.class, ctx, args);
-
-            // Ecore2Emfatic
-            assertTrue(baos.toString().contains("Hi!"));
+            assertTrue(baos.toString().contains("PackageableElement"));
         }
     }
 }
