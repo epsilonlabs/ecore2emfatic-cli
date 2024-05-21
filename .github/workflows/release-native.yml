@@ -1,0 +1,41 @@
+name: Native Release Builds
+on:
+  push:
+    tags: [ "[0-9]+.[0-9]+.[0-9]+" ]
+
+jobs:
+  build:
+    name: Native release build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: '17'
+        distribution: 'graalvm'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        native-image-job-reports: 'true'
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build nativeCompile nativeTest
+    - name: Upload release asset (Unix)
+      if: ${{ matrix.os != 'windows-latest' }}
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        zip -j ${{ matrix.os }}-ecore2emfatic.zip build/native/nativeCompile/ecore2emfatic* 
+        gh release upload $GITHUB_REF_NAME ${{ matrix.os }}-ecore2emfatic.zip
+    - name: Upload release asset (Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        Compress-Archive -Path build/native/nativeCompile/ecore2emfatic* -DestinationPath ${{ matrix.os }}-ecore2emfatic.zip
+        gh release upload ${{ github.ref_name }} ${{ matrix.os }}-ecore2emfatic.zip

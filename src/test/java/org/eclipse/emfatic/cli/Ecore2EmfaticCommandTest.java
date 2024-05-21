@@ -12,8 +12,7 @@ package org.eclipse.emfatic.cli;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
-import static org.hamcrest.MatcherAssert.assertThat; 
-import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -29,12 +28,17 @@ public class Ecore2EmfaticCommandTest {
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
             String[] args = new String[] { "src/test/resources/OO.ecore" };
             PicocliRunner.run(Ecore2EmfaticCommand.class, ctx, args);
-            assertThat("Should see a PackageableElement in the output",
-                baos.toString(), containsString("PackageableElement"));
+            assertContains("Should see a PackageableElement in the output", baos.toString(), "PackageableElement");
         }
     }
 
-    @Test
+    private void assertContains(String reason, String text, String substring) {
+        if (!text.contains(substring)) {
+            fail(String.format("%s, but did not contain '%s':\n%s", reason, substring, text));
+        }
+	}
+
+	@Test
     public void testMetamodelWithPlatformImport() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
@@ -46,8 +50,8 @@ public class Ecore2EmfaticCommandTest {
                 "src/test/resources/platformImport/example2/ColoredTree.ecore"
             };
             PicocliRunner.run(Ecore2EmfaticCommand.class, ctx, args);
-            assertThat("Should see 'extends Trees.Tree' in the output",
-                baos.toString(), containsString("extends Trees.Tree"));
+            assertContains("Should see 'extends Trees.Tree' in the output",
+                baos.toString(), "extends Trees.Tree");
         }
     }
 }

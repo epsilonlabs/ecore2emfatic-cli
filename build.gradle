@@ -1,9 +1,10 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.micronaut.application") version "4.0.4"
+    id("maven-publish")
 }
 
-version = "0.1"
+version = "0.1.0"
 group = "org.eclipse.emfatic.cli"
 
 repositories {
@@ -18,7 +19,6 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("org.eclipse.emfatic:org.eclipse.emfatic.core:1.1.0")
     implementation("org.eclipse.platform:org.eclipse.core.resources:3.13.700")
-    testImplementation('org.hamcrest:hamcrest:2.2')
     runtimeOnly("ch.qos.logback:logback-classic")
 }
 
@@ -38,5 +38,20 @@ micronaut {
     }
 }
 
-
-
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/epsilonlabs/ecore2emfatic-cli"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}

@@ -39,7 +39,7 @@ import java.util.Map;
         EStringToStringMapEntryImpl[].class,
         ETypeParameter[].class
 })
-@Command(name = "Ecore2Emfatic", description = "Generates Emfatic sources from an .ecore file", mixinStandardHelpOptions = true)
+@Command(name = "ecore2emfatic", description = "Generates Emfatic sources from an .ecore file", mixinStandardHelpOptions = true)
 public class Ecore2EmfaticCommand implements Runnable {
 
     static class URIMapping {

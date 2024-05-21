@@ -19,13 +19,13 @@ It is recommended to use [SDKMAN](https://sdkman.io/) for installing and managin
 To produce Emfatic sources from an `.ecore` file, using the all-in-one JAR file in `build/libs/*-all.jar`:
 
 ```sh
-java -jar path/to/Ecore2Emfatic-VERSION-all.jar path/to/your.ecore
+java -jar path/to/ecore2emfatic-VERSION-all.jar path/to/your.ecore
 ```
 
 When using one of the native binaries, this can be simplified to:
 
 ```sh
-path/to/Ecore2Emfatic path/to/your.ecore
+path/to/ecore2emfatic path/to/your.ecore
 ```
 
 ## Using native binaries as a Git filter
@@ -34,13 +34,13 @@ In order to compute differences between `.ecore` file versions using a Git `text
 In Linux/Mac:
 
 ```sh
-cp build/native/nativeCompile/Ecore2Emfatic /folder/in/PATH
+cp build/native/nativeCompile/ecore2emfatic /folder/in/PATH
 ```
 
 You will then need to define the `ecore` differencing algorithm:
 
 ```sh
-git config --global diff.ecore.textconv Ecore2Emfatic
+git config --global diff.ecore.textconv ecore2emfatic
 ```
 
 You can then use this conversion from any Git repository, by adding a `.gitattributes` file to its root folder with this content:
@@ -71,18 +71,18 @@ index 84da8c9..f611dd1 100644
 If your `.ecore` files import other metamodels through URIs, you can provide mappings from URIs to specific `.ecore` files or folders via the `--from` and `--to` options:
 
 ```sh
-path/to/Ecore2Emfatic --from platform:/resource --to path/to/base/folder your.ecore
+path/to/ecore2emfatic --from platform:/resource --to path/to/base/folder your.ecore
 ```
 
 You can specify multiple pairs of `--from` and `--to` options, as in:
 
 ```sh
-path/to/Ecore2Emfatic --from A --to B --from C --to D your.ecore
+path/to/ecore2emfatic --from A --to B --from C --to D your.ecore
 ```
 
 If you are using this tool as a `textconv` filter via Git, you would need to provide these options in your repository's configuration.
 For example:
 
 ```sh
-git config diff.ecore.textconv "Ecore2Emfatic --from A --to B"
+git config diff.ecore.textconv "ecore2emfatic --from A --to B"
 ```
