@@ -1,7 +1,11 @@
 package org.eclipse.emfatic.cli;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EParameter;
+import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -9,12 +13,21 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.emfatic.core.generator.emfatic.Writer;
 
 import io.micronaut.configuration.picocli.PicocliRunner;
-
+import io.micronaut.core.annotation.TypeHint;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "Ecore2Emfatic", description = "...",
-        mixinStandardHelpOptions = true)
+@TypeHint(value = {
+    EEnumLiteral[].class,
+    EParameter[].class,
+    EStringToStringMapEntryImpl[].class,
+    ETypeParameter[].class
+})
+@Command(
+    name = "Ecore2Emfatic",
+    description = "Generates Emfatic sources from an .ecore file",
+    mixinStandardHelpOptions = true
+)
 public class Ecore2EmfaticCommand implements Runnable {
 
     @Parameters(index="0")
