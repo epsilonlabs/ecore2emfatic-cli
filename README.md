@@ -14,6 +14,20 @@ To build and test the Java and native binary versions of the project, run:
 Note that for the native binaries, you will need [GraalVM](https://www.graalvm.org/) 17 or newer.
 It is recommended to use [SDKMAN](https://sdkman.io/) for installing and managing JDKs.
 
+## Running
+
+To produce Emfatic sources from an `.ecore` file, using the all-in-one JAR file in `build/libs/*-all.jar`:
+
+```sh
+java -jar path/to/Ecore2Emfatic-VERSION-all.jar path/to/your.ecore
+```
+
+When using one of the native binaries, this can be simplified to:
+
+```sh
+path/to/Ecore2Emfatic path/to/your.ecore
+```
+
 ## Using native binaries as a Git filter
 
 In order to compute differences between `.ecore` file versions using a Git `textconv`, first add the native binary to your path.
@@ -50,4 +64,25 @@ index 84da8c9..f611dd1 100644
 -       private = 2;
 +       private = 3;
  }
+```
+
+## Providing URI mappings
+
+If your `.ecore` files import other metamodels through URIs, you can provide mappings from URIs to specific `.ecore` files or folders via the `--from` and `--to` options:
+
+```sh
+path/to/Ecore2Emfatic --from platform:/resource --to path/to/base/folder your.ecore
+```
+
+You can specify multiple pairs of `--from` and `--to` options, as in:
+
+```sh
+path/to/Ecore2Emfatic --from A --to B --from C --to D your.ecore
+```
+
+If you are using this tool as a `textconv` filter via Git, you would need to provide these options in your repository's configuration.
+For example:
+
+```sh
+git config diff.ecore.textconv "Ecore2Emfatic --from A --to B"
 ```
